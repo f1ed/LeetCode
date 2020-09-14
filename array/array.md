@@ -1,6 +1,6 @@
 ### 27. Remove Elements
 
-[Remove Elements](https://leetcode.com/problems/remove-element/) 
+[27-Remove Elements](https://leetcode.com/problems/remove-element/) 
 
 Solution
 
@@ -49,7 +49,7 @@ class Solution:
 
 ### 26. Remove Duplicates from Sorted Array
 
-[Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array/) 
+[26-Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array/) 
 
 Solution：
 
@@ -73,6 +73,120 @@ class Solution:
         return tot
 ```
 
+
+
+---
+
 1. 第一次提交的时候`before = nums[0] - 1` 报错了，原因是传入数组长度为0，下标越界。
 
    注意空数组的下标越界问题。
+
+### 80. Remove Duplicates from Sorted Array II
+
+[80-Remove Duplicates from Sorted Array II](https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/) 
+
+Solution:
+
+```python
+from typing import List
+
+
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        before = None
+        before_cnt = 0
+        length = 0
+        for index in range(len(nums)):
+            if nums[index] != before:
+                nums[length] = nums[index]
+                before = nums[index]
+                length += 1
+                before_cnt = 1
+            else:
+                before_cnt += 1
+                if before_cnt <= 2:
+                    nums[length] = nums[index]
+                    length += 1
+        return length
+
+```
+
+### 189. Rotate Array
+
+[189-Rotate Array](https://leetcode.com/problems/rotate-array/) 
+
+Solution:
+
+1. 简单做法：空间换时间
+
+   时间复杂度：$\mathcal{O}(n)$ 
+
+   空间复杂度：$\mathcal{O}(n)$ ，循环右移时多开了一个数组。
+
+   ```python
+   from typing import List
+   import queue
+   
+   class Solution:
+       def rotate(self, nums: List[int], k: int) -> None:
+           """
+           Do not return anything, modify nums in-place instead.
+           """
+           length = len(nums)
+           a = [0] * length
+           for index in range(length):
+               a[(index + k)%length] = nums[index]
+           nums[:] = a
+   ```
+
+2. 利用数学同余关系
+
+   时间复杂度：$\mathcal{O}(n)$ 
+
+   空间复杂度：$\mathcal{O}(n)$ ，循环右移时只多开了一个变量。
+
+   原理：
+
+   【待完善】
+
+   ```python
+   class Solution:
+       def rotate(self, nums: List[int], k: int) -> None:
+           """
+           Do not return anything, modify nums in-place instead.
+           """
+           length = len(nums)
+           k %= length
+           start = 0
+           cnt = 0
+           while cnt < length:
+               current, prev = start, nums[start]
+               while True:
+                   current = (current + k) % length
+                   prev, nums[current] = nums[current], prev
+                   cnt += 1
+                   if current == start:
+                       break
+               start += 1
+   ```
+
+   
+
+---
+
+
+
+1. Python用引用管理对象。
+
+   ```c++
+   int a1 = 1, *p = &a1;
+   int a2 = 2, &b = a2;
+   ```
+
+   - 指针：指针变量是一个新变量，这个变量存储的是（变量a1的）地址，该地址指向一个存储单元。（该存储单元存放的是a1的值）。
+   - 引用：引用的实质是变量的别名，所以a2和b实际是一个东西，在内存中占有同一个存储单元。
+
+   所以python中交换对象可以直接`a,b = b,a` 
+
+2. Python 列表的操作：切片。
+
