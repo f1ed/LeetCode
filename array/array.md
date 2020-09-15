@@ -391,6 +391,10 @@ Solution：
 
 2. 对问题分析进行再简化
 
+   时间复杂度：$\mathcal{O}(n)$ 
+
+   空间复杂度：$\mathcal{O}(n)$ 
+
    ```python
      i	: 0 1 2 3 4
    g[i]: 1 2 3 4 5
@@ -439,15 +443,395 @@ Solution：
 
    
 
-
-
 ---
 
 1. 前缀和
 2. `list.index(value)` 找出list中值为`value` 的第一个下标。
 3. `min(list)` 返回list中的最小值。
 
+### 118-Pascal's Triangle
 
+[118-Pascal's Triangle](https://leetcode.com/problems/pascals-triangle/submissions/) 
+
+Problem:
+
+给定一个数字，输出如下规则的值。
+
+<img src="https://s1.ax1x.com/2020/09/15/wyWI9s.gif" alt="wyWI9s.gif" style="zoom:50%;" />   
+
+Solution：
+
+注意边界吧。（不太喜欢这种题qwq
+
+```python
+from typing import List
+
+
+class Solution:
+    def generate(self, numRows: int) -> List[List[int]]:
+        ans = []
+        for i in range(0, numRows):
+            temp = [1] * (i+1)
+            for j in range(1, i):
+                temp[j] = ans[i-1][j-1] + ans[i-1][j]
+            ans.append(temp)
+        return ans
+```
+
+---
+
+1. Python 中的append会出现值被覆盖的情况：变量在循环外定义，但在循环中对该变量做出一定改变，然后append到列表，最后发现列表中的值都是一样的。
+
+   因为Python中很多时候都是以对象的形式管理对象，因此append给列表的是一个地址。
+
+### 119-Pascal's Triangle II
+
+[119-Pascal's Triangle II](https://leetcode.com/problems/pascals-triangle-ii/) 
+
+Problem：
+
+给定一个数字，输出某一行。
+
+Solution：
+
+```python
+from typing import List
+
+
+class Solution:
+    def getRow(self, rowIndex: int) -> List[int]:
+        temp = [1]
+        for i in range(0, rowIndex):
+            for j in range(i, 0, -1):
+                temp[j] += temp[j-1]
+            temp.append(1)
+        return temp
+
+```
+
+### 169-Majority Element
+
+[169-Majority Element](https://leetcode.com/problems/majority-element/) 
+
+Problem:
+
+给一串数字，找到出现次数大于 `n/2` 的数字。
+
+Solution：
+
+用字典计数。
+
+```python
+from typing import List
+
+
+class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        n = len(nums)
+        cnt = {}
+        for ele in nums:
+            if ele in cnt:
+                cnt[ele] += 1
+            else:
+                cnt[ele] = 1
+        return max(cnt, key=cnt.get)
+```
+
+
+
+---
+
+1. 返回值最大/最小的键/索引。
+   - 列表：
+     - 最大值的索引：list.index(max(list))
+     - 最小值的索引：list.index(min(list))
+   - 字典：
+     - 最大值的键：max(dict, key=dict.get)
+     - 最小值的键：min(dict, key=dict.get)
+
+### 229-Majority Element II
+
+[229-Majority Element II](https://leetcode.com/problems/majority-element-ii/) 
+
+Problem: 
+
+给一串数字，返回出现次数大于 `n/3` 的数字。
+
+Solution：
+
+```python
+from typing import List
+
+
+class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        n = len(nums)
+        cnt = {}
+        ans = []
+        for ele in nums:
+            if ele in cnt:
+                cnt[ele] += 1
+            else:
+                cnt[ele] = 1
+        for (k, v) in cnt.items():
+            if v > n/3:
+                ans.append(k)
+        return ans
+```
+
+---
+
+1. 字典的实用方法：
+
+   | 操作                                        | 实现方法                                              |
+   | ------------------------------------------- | ----------------------------------------------------- |
+   | 删除字典元素                                | `del dict['Name']`                                    |
+   | 清空字典所有条目                            | `dict.clear()`                                        |
+   | 删除字典                                    | `del dict`                                            |
+   | 返回指定键的值，如果值不存在返回default的值 | `dict.get(key, default)`                              |
+   | 如果键不存在字典中，添加键并将值设为default | `dict.setdefault(key, default=None)`                  |
+   | 判读键是否存在                              | 1. `if k in dict` 2. `dict.has_key(key)` 存在返回true |
+   | 以列表返回可遍历的（键，值）元祖数组        | `dict.items()`                                        |
+   | 以列表返回一个字典的所有键                  | `dict.keys()`                                         |
+   | 以列表返回字典中的所有值                    | `dict.values()`                                       |
+   | 返回最大值的键值                            | `max(dict, key=dict.get)`                             |
+   | 返回最小值的键值                            | `min(dict, key=dict.get)`                             |
+
+2. 遍历字典的方法：
+
+   ```python
+   # -*- coding:utf-8 -*-
+   
+   dict={"a":"Alice","b":"Bruce","J":"Jack"}
+   
+   # 实例一：键循环
+   for i in dict:
+       print "dict[%s]=" % i,dict[i]
+   # 结果:
+   # dict[a]= Alice
+   # dict[J]= Jack
+   # dict[b]= Bruce
+   
+   # 实例二：键值元组循环
+   for i in  dict.items():
+       print i
+   # 结果:
+   # ('a', 'Alice')
+   # ('J', 'Jack')
+   # ('b', 'Bruce')
+   
+   # 实例三：键值元组循环
+   for (k,v) in  dict.items():
+       print "dict[%s]=" % k,v
+   # 结果:
+   # dict[a]= Alice
+   # dict[J]= Jack
+   # dict[b]= Bruce
+   ```
+
+### 274-H-Index
+
+[274-H-Index](https://leetcode.com/problems/h-index/) 
+
+Problem:
+
+给出研究人员论文的论文引用次数，计算它的H指数（有h篇论文的引用次数至少为h，剩下N-h篇论文的引用次数不超过h）。
+
+Solution：
+
+时间复杂度：$\mathcal{O}(n\log{n})$ 
+
+空间复杂度：$\mathcal{O}(n)$ 
+
+排序后，再二分。（感觉自己的二分写的有点丑qwq
+
+还有一种思路是，排序完，从最大的h开始递减遍历，满足条件就返回。反正排序也要$\mathcal{O}(n\log{n})$ 的复杂度...
+
+```python
+from typing import List
+
+
+class Solution:
+    def hIndex(self, citations: List[int]) -> int:
+        n = len(citations)
+        citations.sort()
+        begin = 0
+        end = n - 1
+        while begin <= end:
+            mid = (begin + end) >> 1
+            h = n - mid
+            if citations[mid] >= h:
+                end = mid
+                if begin == end:
+                    return h
+            else:
+                begin += 1
+        return n-begin
+```
+
+---
+
+1. 非递归写二分：`while begin <= end` 
+
+### 275-H-Index II
+
+[275-H-Index II](https://leetcode.com/problems/h-index-ii/) 
+
+Problem:
+
+和274一样，给了递增的论文引用数，希望能用指数时间返回H指数。
+
+Solution：
+
+啊，就二分鸭。
+
+```python
+from typing import List
+
+
+class Solution:
+    def hIndex(self, citations: List[int]) -> int:
+        n = len(citations)
+        begin = 0
+        end = n - 1
+        while begin <= end:
+            mid = (begin + end) >> 1
+            h = n - mid
+            if citations[mid] >= h:
+                end = mid
+                if begin == end:
+                    return h
+            else:
+                begin += 1
+        return n - begin
+```
+
+
+
+### 243-Shortest Word Distance
+
+qwq 这道题还收费来着，于是于是就开了个中国区的会员（中国区的会员便宜好多啊！！）
+
+[243-Shortest Word Distance](https://leetcode-cn.com/problems/shortest-word-distance/) 
+
+Problem：
+
+给定一串单词，单词1和单词2，计算单词1单词2在单词列表中的距离。
+
+Solution：
+
+| Solution    | Runtime | Memory | Language |
+| ----------- | ------- | ------ | -------- |
+| S1-二分查找 | 44ms    | 15.7MB | python3  |
+| S2-线性维护 | 40ms    | 15.6MB | python3  |
+
+1. 二分查找
+
+   时间复杂度：$\mathcal{O}(n\log{n})$ 
+
+   空间复杂度：$\mathcal{O}(n)$ 
+
+   （最开始还很疑惑啥是单词距离...单词1和单词2可能在单词列表中重复出现）
+
+   计算出单词1和单词2在单词列表中出现的索引值列表，是递增有序的。
+
+   对于单词1索引列表中的每个值，在单词2索引列表中查找该值的lower_bound，计算距离。
+
+   同理，对于单词2索引列表中的每个值，也同样计算距离。
+
+   找出最小距离。
+
+   ```python
+   from typing import List
+   
+   
+   def lower_bound(a: list, x: int) -> int:
+       n = len(a)
+       begin = 0
+       end = n - 1
+       while begin <= end:
+           mid = (begin + end) >> 1
+           if a[mid] >= x:
+               end = mid
+               if begin == end:
+                   return begin
+           else:
+               begin += 1
+       return -1
+   
+   
+   class Solution:
+       ans = None
+   
+       def findShortest(self, li1: list, li2: list) -> None:
+           for idx in li1:
+               min_dis_idx = lower_bound(li2, idx)
+               if min_dis_idx == -1:
+                   continue
+               else:
+                   self.ans = min(self.ans, li2[min_dis_idx] - idx)
+                   if self.ans == 1:
+                       return
+   
+       def shortestDistance(self, words: List[str], word1: str, word2: str) -> int:
+           n = len(words)
+           li1 = []
+           li2 = []
+           self.ans = n
+           for idx in range(n):
+               # li1 and li2 are ordered
+               if words[idx] == word1:
+                   li1.append(idx)
+               if words[idx] == word2:
+                   li2.append(idx)
+           self.findShortest(li1, li2)
+           if self.ans > 1:
+               self.findShortest(li2, li1)
+   
+           return self.ans
+   ```
+
+   
+
+2. 线性维护：
+
+   时间复杂度：$\mathcal{O}(n)$  
+
+   空间复杂度：$\mathcal{O}(n)$ 
+
+   问题还能再简化，线性扫描单词列表，维护两个变量，单词1出现的最近索引，单词2出现的最近索引。扫描时计算距离，每当单词1或单词2出现时，就用另一个单词的最近索引计算。
+
+   ```python
+   from typing import List
+   
+   
+   class Solution:
+       def shortestDistance(self, words: List[str], word1: str, word2: str) -> int:
+           n = len(words)
+           lst1 = None
+           lst2 = None
+           ans = n
+           for idx in range(n):
+               if words[idx] == word1:
+                   lst1 = idx
+                   if lst2 is not None:
+                       ans = min(ans, lst1-lst2)
+               if words[idx] == word2:
+                   lst2 = idx
+                   if lst1 is not None:
+                       ans = min(ans, lst2-lst1)
+           return ans
+   ```
+
+---
+
+1. C++中：
+
+   lower_bound(begin, end, num)：返回num的下界，即大于等于num的第一个索引位置。
+
+   upper_bound(begin, end, num)：返回num的上界，即大于num的第一个索引位置。
+
+   Python中用二分实现这两个函数。 
 
 # reference
 
