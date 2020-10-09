@@ -37,6 +37,3 @@ class WordDistance:
 # Your WordDistance object will be instantiated and called as such:
 # obj = WordDistance(words)
 # param_1 = obj.shortest(word1,word2)
-a = WordDistance(["practice", "makes", "perfect", "coding", "makes"])
-print(a.shortest("makes", "coding"))
-
